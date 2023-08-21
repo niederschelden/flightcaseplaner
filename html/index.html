@@ -1,1 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flightcase Planer</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 1em 0;
+            padding: 10px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            /* Sorgt für Platz zwischen den beiden Listen */
+            flex-wrap: wrap;
+            /* Erlaubt Umbruch, wenn der Platz nicht ausreicht */
+            align-items: flex-start;
+            gap: 20px;
+            /* Abstand zwischen den Elementen */
+            margin-bottom: 20px;
+        }
+
+        #flightcaseForm {
+            flex: 1;
+            /* Nimmt den verfügbaren Platz ein, aber erlaubt Umbruch */
+            min-width: 250px;
+            /* Mindestbreite für das Formular */
+        }
+
+        #profileImage {
+            flex: 1;
+            min-width: 250px;
+            /* Mindestbreite für das Bild */
+        }
+
+        #fabricationContainer,
+        #shoppingList {
+            flex: 1;
+            min-width: 250px;
+            /* Mindestbreite für Listen */
+        }
+
+        #fabricationContainer {
+            order: 2;
+            /* Bringt diese Liste nach rechts */
+        }
+
+        #shoppingList {
+            order: 1;
+            /* Bringt diese Liste nach links */
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Flightcase Planer</h2>
+    <div class="container">
+        <form id="flightcaseForm">
+
+            <label for="baseHeight">Basis Höhe (mm):</label>
+            <input type="number" id="baseHeight" value="100"><br><br>
+
+            <label for="lidHeight">Deckel Höhe (mm):</label>
+            <input type="number" id="lidHeight" value="400"><br><br>
+
+            <label for="length">Länge (mm):</label>
+            <input type="number" id="length" value="480"><br><br>
+
+            <label for="width">Breite (mm):</label>
+            <input type="number" id="width" value="580"><br><br>
+
+            <label for="profile">Wählen Sie ein Profil:</label>
+            <select id="profile">
+                <option value="0">Adam Hall 6136 - 4mm</option>
+                <option value="1">Adam Hall 6137 - 4.5mm</option>
+                <option value="2">Adam Hall 6129 - 7mm</option>
+                <option value="3">Adam Hall 6106 - 7mm</option>
+                <option value="4">Adam Hall 6107 - 9.5mm</option>
+                <option value="5">Adam Hall 6119 - 10mm</option>
+            </select>
+
+            <input type="checkbox" id="allow2000mm" name="allow2000mm">
+            <label for="allow2000mm">Erlaube 2 Meter Profil</label>
+
+            <input type="button" value="Berechnen" onclick="calculate()">
+        </form>
+        <!--<img id="profileImage" alt="Profil Bild" width="400" />-->
+    </div>
+
+
+
+    <div class="container">
+        <div id="fabricationContainer">
+            <h2>Fabrikationsliste:</h2>
+            <div id="fabricationList"></div>
+            <h2>Dimensionen:</h2>
+            <div id="dimensionsAusgabe"></div>
+        </div>
+        <div>
+            <h2>Einkaufsliste:</h2>
+            <pre id="shoppingList"></pre>
+        </div>
+    </div>
+    <script>
+        // Allgemeine Variablen
+        let shoppingList = "";
+        let lengthsArray = [];
+
+        // Ihre Profile
+        var profiles = [
+            ["Adam Hall 6136", 17, 10.6, 1.2, 4, "default.jpg"],
+            ["Adam Hall 6137", 18, 11.1, 1.2, 4.5, "default.jpg"],
+            ["Adam Hall 6129", 22, 12, 1.5, 7, "default.jpg"],
+            ["Adam Hall 6106", 30, 20, 1.5, 7, "default.jpg"],
+            ["Adam Hall 6107", 30, 17, 1.5, 9.5, "default.jpg"],
+            ["Adam Hall 6119", 30, 16, 1.5, 10, "default.jpg"]
+        ];
+        /*
+        document.getElementById('profile').addEventListener('change', function () {
+            const selectedIndex = document.getElementById('profile').value;
+            const profil = profiles[selectedIndex];
+            const imageUrl = profil[5];
+            document.getElementById('profileImage').src = imageUrl;
+        });
+        */
+
+        document.getElementById('profile').dispatchEvent(new Event('change'));
+
+        function generateFabricationList(cuts, combination) {
+            let list = document.createElement("ul");
+
+            cuts.forEach((cut, index) => {
+                let totalCut = cut.reduce((a, b) => a + b, 0);
+                let appropriateStock = combination[index];
+                let waste = Math.round(appropriateStock - totalCut); // Rundet auf den nächsten ganzen Millimeter
+
+                let listItem = document.createElement("li");
+                listItem.textContent = `Stange (${appropriateStock}mm): ${cut.join(", ")}mm (Verschnitt: ${waste}mm)`;
+                list.appendChild(listItem);
+            });
+
+            return list;
+        }
+
+
+
+        function cuttingStock(stockLengths, pieces) {
+            let bestCount = Infinity;
+            let bestCombination = null;
+            let bestCuts = [];
+
+            // Sortiere als Optimierungsversuch pieces in absteigender Reihenfolge
+            pieces.sort((a, b) => b - a);//kann auskommetntiert werden. je nach dem was besser läuft
+
+
+            function tryCombination(remaining, usedStocks, cuts, currentIndex) {
+                if (currentIndex >= pieces.length) {
+                    if (usedStocks.length < bestCount) {
+                        bestCount = usedStocks.length;
+                        bestCombination = [...usedStocks];
+                        bestCuts = cuts.map((cut) => cut.slice());
+                    }
+                    return;
+                }
+
+                for (let stockLength of stockLengths) {
+                    let fittingStockIndex = remaining.findIndex(rem => rem >= pieces[currentIndex]);
+
+                    if (fittingStockIndex !== -1) {
+                        remaining[fittingStockIndex] -= pieces[currentIndex];
+                        cuts[fittingStockIndex].push(pieces[currentIndex]);
+                        tryCombination(remaining, usedStocks, cuts, currentIndex + 1);
+                        cuts[fittingStockIndex].pop(); // Rückgängig machen
+                        remaining[fittingStockIndex] += pieces[currentIndex];
+                    } else {
+                        let newRemaining = [...remaining, stockLength - pieces[currentIndex]];
+                        let newCuts = [...cuts, [pieces[currentIndex]]];
+                        tryCombination(newRemaining, [...usedStocks, stockLength], newCuts, currentIndex + 1);
+                    }
+                }
+            }
+
+            tryCombination([], [], [], 0);
+
+            return {
+                totalStocks: bestCount,
+                combination: bestCombination,
+                cuts: bestCuts
+            };
+        }
+
+
+        function addToShoppingList(quantity, type, length) {
+            shoppingList += quantity + "x Aluprofil vom Typ: " + type + " in der Länge " + length + "mm\n";
+            for (let i = 0; i < quantity; i++) {
+                lengthsArray.push(length);
+            }
+        }
+
+        function calculate() {
+            let allowedStockLengths = [1000];
+            if (document.getElementById('allow2000mm').checked) {
+                allowedStockLengths.push(2000);
+            }
+            // Zurücksetzen der shoppingList und lengthsArray zu Beginn der Berechnung
+            shoppingList = "";
+            lengthsArray = [];
+            // Leeren des 'fabricationList' Elements
+            document.getElementById("fabricationList").innerHTML = '';
+
+            const baseHeight = parseFloat(document.getElementById("baseHeight").value);
+            const lidHeight = parseFloat(document.getElementById("lidHeight").value);
+            const length = parseFloat(document.getElementById("length").value);
+            const width = parseFloat(document.getElementById("width").value);
+
+
+            // Holen Sie das ausgewählte Profil
+            const selectedIndex = document.getElementById('profile').value;
+            const profil = profiles[selectedIndex];
+            const schenkellength = profil[1];
+            const reduction = profil[2];
+            const materialthickness = profil[3];
+            const thickness = profil[4];
+
+            const profiloffset = schenkellength - reduction;
+            const walloffset = profiloffset - materialthickness - thickness;
+
+            const outerWidth = width + 2 * profiloffset;
+            const outerHeight = baseHeight + lidHeight + 2 * profiloffset;
+            const outerLength = length + + 2 * profiloffset;
+
+            //Berechnen der Außengröesse
+            let dimension = "LxHxT " + outerLength + " x " + outerHeight + " x " + outerWidth + "mm\nHöhe ggf. zzgl. Sprengung duch Verschlußprofil\n ";
+            document.getElementById("dimensionsAusgabe").textContent = dimension;
+
+            // Berechnungen für die Profile des Deckels
+            shoppingList += "-- Profile für den Deckel --\n";
+            addToShoppingList(4, profil[0], lidHeight - reduction);
+            addToShoppingList(2, profil[0], length - (reduction * 2));
+            addToShoppingList(2, profil[0], width - (reduction * 2));
+
+            // Berechnungen für die Profile des Bodens
+            shoppingList += "-- Profile für den Boden --\n";
+            addToShoppingList(4, profil[0], baseHeight - reduction);
+            addToShoppingList(2, profil[0], length - (reduction * 2));
+            addToShoppingList(2, profil[0], width - (reduction * 2));
+
+            // Plattenberechnung für den Deckel
+            shoppingList += "-- Deckel --\n";
+            shoppingList += "2x Front: LxHxT " + width + "x" + lidHeight + "x" + thickness + "mm\n";
+            shoppingList += "2x Seite: LxHxT " + length + "x" + lidHeight + "x" + thickness + "mm\n";
+            shoppingList += "1x Deckplatte: LxHxT " + width + "x" + length + "x" + thickness + "mm\n";
+
+            // Plattenberechnung für den Boden
+            shoppingList += "-- Boden --\n";
+            shoppingList += "2x Front: LxHxT " + width + "x" + baseHeight + "x" + thickness + "mm\n";
+            shoppingList += "2x Seite: LxHxT " + length + "x" + baseHeight + "x" + thickness + "mm\n";
+            shoppingList += "1x Bodenplatte: LxHxT " + width + "x" + length + "x" + thickness + "mm\n";
+
+
+            let result = cuttingStock(allowedStockLengths, lengthsArray);
+
+            shoppingList += "\n-- Optimale Stangenkombination --\n";
+            shoppingList += "Gesamte Stangen: " + result.totalStocks + "\n";
+            shoppingList += "Kombination: " + result.combination.join(", ") + "mm\n";
+
+            document.getElementById("shoppingList").textContent = shoppingList;
+
+            let fabricationList = generateFabricationList(result.cuts, result.combination);
+            document.getElementById("fabricationList").appendChild(fabricationList);
+
+            //Ab ans Ende
+            document.getElementById("dimensionsAusgabe").scrollIntoView({ behavior: 'smooth' });
+            // Verschieben Sie diese `console.log`-Aufrufe hierher:
+            //console.log(shoppingList);
+            //console.log(lengthsArray);
+            //console.log(result);
+        }
+    </script>
+</body>
+
+</html>
