@@ -34,7 +34,7 @@ Designed by niederschelden.
 
 ## License
 
-This work is licensed under the Creative Commons Attribution 4.0 International License. This means you are free to use, modify, and distribute it, as long as you provide appropriate credit.
+This work is licensed under the Creative Commons 1.0 Universal License. This means you are free to use, modify, and distribute it, as long as you provide appropriate credit.
 
 ---
 
