@@ -28,8 +28,8 @@ Open the [HTML/Javascript tool](https://niederschelden.github.io/flightcaseplane
 ### Step 2: Material and Profile Adjustments
 Set your preferred material thickness. Additionally, make any necessary adjustments to the aluminum profile.
 
-### Step 3: Advanced Customization (Optional)
-For those familiar with OpenSCAD: Download the OpenSCAD files from this repository and manually change values in the declaration section for more detailed visualization.
+### Step 3: Visualisation (Optional)
+For those familiar with OpenSCAD: Download the OpenSCAD files from this repository and manually adjust values in the declaration section. Rotate the case to view from all angles and explore the exploded view to understand how parts interlock.
 
 ### Step 4: Build Your FlightCase
 Once you've set everything up, it's time to get building. Have fun!
