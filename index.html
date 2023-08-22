@@ -59,6 +59,7 @@
 <body>
 
     <h2>Flightcase Planer</h2>
+    <h3>Dieses Planungstool ist ein Versuch. Ich gebe keinerlei Garantie für die ordnungsgemäße Funkton</h3>
     <div class="container">
         <form id="flightcaseForm">
 
@@ -71,7 +72,7 @@
             <label for="length">Länge (mm):</label>
             <input type="number" id="length" value="480"><br><br>
 
-            <label for="width">Breite (mm):</label>
+            <label for="width">Tiefe (mm):</label>
             <input type="number" id="width" value="580"><br><br>
 
             <label for="profile">Wählen Sie ein Profil:</label>
@@ -265,7 +266,7 @@
 
             let result = cuttingStock(allowedStockLengths, lengthsArray);
 
-            shoppingList += "\n-- Optimale Stangenkombination --\n";
+            shoppingList += "\n-- Mögliche Profillängenkombination --\n";
             shoppingList += "Gesamte Stangen: " + result.totalStocks + "\n";
             shoppingList += "Kombination: " + result.combination.join(", ") + "mm\n";
 
