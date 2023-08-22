@@ -18,11 +18,18 @@ What began as a simple desire for a transport case for a 3D printer has evolved 
 
 ## How to Use
 
-1. Download the openSCAD files for visualization.
-2. Open the HTML/Javascript tool and adjust the internal dimensions to your needs.
-3. Set the desired material thickness and make any necessary adjustments to the aluminum profile.
-4. Generate your shopping list.
-5. Build your customized FlightCase.
+### Step 1: Set Your Dimensions
+Open the [HTML/Javascript tool](https://niederschelden.github.io/flightcaseplaner/) and adjust the internal dimensions to fit your needs.
+
+### Step 2: Material and Profile Adjustments
+Set your preferred material thickness. Additionally, make any necessary adjustments to the aluminum profile.
+
+### Step 3: Advanced Customization (Optional)
+For those familiar with OpenSCAD: Download the OpenSCAD files from this repository and manually change values in the declaration section for more detailed visualization.
+
+### Step 4: Build Your FlightCase
+With all parameters set, proceed to build your customized FlightCase. Happy building!
+
 
 ## Contributions
 
