@@ -6,10 +6,14 @@
 
 What began as a simple desire for a transport case for a 3D printer has evolved into an extensive project. The result is a flexible FlightCase Designer. This project has somewhat "gone off the rails", and now includes a customizable openSCAD for visualization, as well as an HTML page for generating shopping lists, calculating cut lengths, and determining external dimensions.
 
-**Features**:
-- Adjustable wall thickness, height, width, and length.
-- HTML/Javascript tool for intuitive FlightCase planning.
-- Customizable internal dimensions for a variety of applications.
+## Features:
+
+- **Intuitive Customization**: Adjust wall thickness and internal dimensions to suit various applications.
+- **Web-based Planning**: HTML/Javascript tool designed for user-friendly FlightCase planning.
+- **Detailed Visualization**: Customizable openSCAD file for in-depth visual representation.
+- **Shopping Assistant**: Automatically creates a shopping list for your project.
+- **Precise Measurements**: Calculates external dimensions based on your inputs.
+- **Waste Reduction**: Provides expert recommendations on dividing and cutting aluminum profiles to ensure minimal waste.
 
 ## Design Notes
 
