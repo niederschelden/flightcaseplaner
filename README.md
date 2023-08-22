@@ -28,7 +28,7 @@ Set your preferred material thickness. Additionally, make any necessary adjustme
 For those familiar with OpenSCAD: Download the OpenSCAD files from this repository and manually change values in the declaration section for more detailed visualization.
 
 ### Step 4: Build Your FlightCase
-With all parameters set, proceed to build your customized FlightCase. Happy building!
+Once you've set everything up, it's time to get building. Have fun!
 
 
 ## Contributions
