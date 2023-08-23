@@ -26,7 +26,7 @@ What began as a simple desire for a transport case for a 3D printer has evolved 
 Open the [HTML/Javascript tool](https://niederschelden.github.io/flightcaseplaner/) and adjust the internal dimensions to fit your needs.
 
 ### Step 2: Material and Profile Adjustments
-Set your preferred material thickness. Additionally, make any necessary adjustments to the aluminum profile.
+Set your preferred material thickness by choosing the correct profile with the fitting insertion dimension.
 
 ### Step 3: Visualisation (Optional)
 For those familiar with OpenSCAD: Download the OpenSCAD files from this repository and manually adjust values in the declaration section. Rotate the case to view from all angles and explore the exploded view to understand how parts interlock.
