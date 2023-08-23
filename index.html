@@ -78,12 +78,7 @@
 
             <label for="profile">Wählen Sie ein Profil:</label>
             <select id="profile">
-                <option value="0">Adam Hall 6136 - 4mm</option>
-                <option value="1">Adam Hall 6137 - 4.5mm</option>
-                <option value="2">Adam Hall 6129 - 7mm</option>
-                <option value="3">Adam Hall 6106 - 7mm</option>
-                <option value="4">Adam Hall 6107 - 9.5mm</option>
-                <option value="5">Adam Hall 6119 - 10mm</option>
+                <!--hier kümmert sich das javascript-->
             </select>
 
             <input type="checkbox" id="allow2000mm" name="allow2000mm">
@@ -91,7 +86,7 @@
 
             <input type="button" value="Berechnen" onclick="calculate()">
         </form>
-        <!--<img id="profileImage" alt="Profil Bild" width="400" />-->
+        <img id="profileImage" alt="Profil Bild" width="400" />
     </div>
 
 
@@ -112,26 +107,53 @@
         // Allgemeine Variablen
         let shoppingList = "";
         let lengthsArray = [];
+        let profiles;  // Globale Deklaration
+        
+        //nun der Reihe nach
+        document.addEventListener("DOMContentLoaded", function () {
+            // Die Profile holen und der globalen Variable zuweisen
+            profiles = loadProfileData();
 
-        // Ihre Profile
-        var profiles = [
-            ["Adam Hall 6136", 17, 10.6, 1.2, 4, "default.jpg"],
-            ["Adam Hall 6137", 18, 11.1, 1.2, 4.5, "default.jpg"],
-            ["Adam Hall 6129", 22, 12, 1.5, 7, "default.jpg"],
-            ["Adam Hall 6106", 30, 20, 1.5, 7, "default.jpg"],
-            ["Adam Hall 6107", 30, 17, 1.5, 9.5, "default.jpg"],
-            ["Adam Hall 6119", 30, 16, 1.5, 10, "default.jpg"]
-        ];
-        /*
+            // Die Profile im Formular veröffentlichen
+            initializeOptions();
+
+            // Das Standardbild setzen
+            document.getElementById('profile').dispatchEvent(new Event('change'));
+        });
+
+        //Funktion zum Anzeigen des richtigen bildes zur profilauswahl
         document.getElementById('profile').addEventListener('change', function () {
             const selectedIndex = document.getElementById('profile').value;
             const profil = profiles[selectedIndex];
             const imageUrl = profil[5];
+            console.log("Setting image URL to:", imageUrl);
             document.getElementById('profileImage').src = imageUrl;
         });
-        */
 
-        document.getElementById('profile').dispatchEvent(new Event('change'));
+
+        // Profile als dummy funktion. später json?
+        function loadProfileData() {
+            return [
+                ["Adam Hall 6136", 17, 10.6, 1.2, 4, "img/default_0.png"],
+                ["Adam Hall 6137", 18, 11.1, 1.2, 4.5, "img/default_1.png"],
+                ["Adam Hall 6129", 22, 12, 1.5, 7, "img/default_2.png"],
+                ["Adam Hall 6106", 30, 20, 1.5, 7, "img/default_3.png"],
+                ["Adam Hall 6107", 30, 17, 1.5, 9.5, "img/default_4.png"],
+                ["Adam Hall 6119", 30, 16, 1.5, 10, "img/default_5.png"]
+            ];
+        }
+
+        //Die select Felder für die Profile erzeugen
+        function initializeOptions() {
+            var selectElement = document.getElementById("profile");
+
+            for (var i = 0; i < profiles.length; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                option.textContent = profiles[i][0] + " - " + profiles[i][4] + "mm";
+                selectElement.appendChild(option);
+            }
+        }
 
         function generateFabricationList(cuts, combination) {
             let list = document.createElement("ul");
