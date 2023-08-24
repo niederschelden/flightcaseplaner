@@ -41,7 +41,7 @@ module casemaker(height){
     //-->|
     points=[
         [strecke[0], radius],
-        for (a = [rotation : segments + rotation]) [ radius + radius * cos(a), radius + radius * sin(a) ],
+        for (a = [rotation : 9 : segments + rotation]) [ radius + radius * cos(a), radius + radius * sin(a) ],
         [radius, strecke[0]],
         [strecke[4], strecke[0]],
         [strecke[4], strecke[1]],
